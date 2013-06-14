@@ -2,22 +2,118 @@ require 'spec_helper'
 
 describe 'aircontrol', :type => :class do
 
-  context 'when deploying on ubuntu' do
+
+  context 'when deploying on ubuntu 12.04 amd64 with default class parameters' do
     let :facts do
       {
         :operatingsystem => 'Ubuntu',
-        :lsbdistcodename => 'precise',
+        :lsbdistcodename => 'Precise',
         :osfamily        => 'Debian',
         :architecture    => 'amd64',
       }
     end
+    it do
+      should contain_class('java')
+    end
+    it do
+      should contain_package('jsvc').with({
+        'before' => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_exec('wget aircontrol').with({
+        'command' => 'wget http://www.ubnt.com/downloads/aircontrol/aircontrol_1.4.2-beta_all.deb -O /var/cache/apt/archives/aircontrol_1.4.2-beta_all.deb',
+        'unless'  => 'dpkg-deb -I /var/cache/apt/archives/aircontrol_1.4.2-beta_all.deb > /dev/null 2>&1',
+        'before'  => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_exec('install aircontrol').with({
+        'command' => 'dpkg -i /var/cache/apt/archives/aircontrol_1.4.2-beta_all.deb',
+        'unless'  => 'dpkg -l aircontrol',
+        'before'  => 'File_line[aircontrol JAVA_HOME]',
+      })
+    end
+    it do
+      should contain_file_line('aircontrol JAVA_HOME').with({
+        'match'  => '^JAVA_HOME=',
+        'line'   => 'JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre',
+        'path'   => '/etc/init.d/aircontrol',
+        'before' => 'Service[aircontrol]',
+      })
+    end
+    it do
+      should contain_service('aircontrol').with({
+        'enable'     => true,
+        'ensure'     => 'running',
+        'hasrestart' => true,
+        'hasstatus'  => false,
+        'name'       => 'aircontrol',
+      })
+    end
+  end
 
+  context 'when deploying version 2 beta on ubuntu 10.04 i386' do
+    let :facts do
+      {
+      :operatingsystem => 'Ubuntu',
+      :lsbdistcodename => 'Lucid',
+      :osfamily        => 'Debian',
+      :architecture    => 'i386',
+      }
+    end
+    let :params do
+      {
+        :version => '2',
+        :installer => 'beta_installer.deb',
+      }
+    end
     it { should contain_class('java') }
-    it { should have_class_count(2) }
-    it { should have_package_resource_count(1) }
-    it { should contain_package('jsvc').with({
-      'before' => 'Exec[install aircontrol]',
-    }) }
-
+    it do
+      should contain_package('jsvc').with({
+        'before' => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_package('iperf').with({
+        'before' => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_package('traceroute').with({
+        'before' => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_exec('wget aircontrol').with({
+        'command' => 'wget http://www.ubnt.com/downloads/aircontrol2/beta_installer.deb -O /var/cache/apt/archives/beta_installer.deb',
+        'unless'  => 'dpkg-deb -I /var/cache/apt/archives/beta_installer.deb > /dev/null 2>&1',
+        'before'  => 'Exec[install aircontrol]',
+      })
+    end
+    it do
+      should contain_exec('install aircontrol').with({
+        'command' => 'dpkg -i /var/cache/apt/archives/beta_installer.deb',
+        'unless'  => 'dpkg -l aircontrol2',
+        'before'  => 'File_line[aircontrol JAVA_HOME]',
+      })
+    end
+    it do
+      should contain_file_line('aircontrol JAVA_HOME').with({
+        'match'  => '^JAVA_HOME=',
+        'line'   => 'JAVA_HOME=/usr/lib/jvm/java-6-openjdk-i386/jre',
+        'path'   => '/etc/init.d/aircontrol2',
+        'before' => 'Service[aircontrol]',
+      })
+    end
+    it do
+      should contain_service('aircontrol').with({
+        'enable'     => true,
+        'ensure'     => 'running',
+        'hasrestart' => true,
+        'hasstatus'  => true,
+        'name'       => 'aircontrol2',
+      })
+    end
   end
 end
