@@ -23,7 +23,7 @@ class aircontrol::params {
         }
 
         default: {
-          fail("${module_name} is not supported on ${::lsbdistid} ${::lsbdistrelease}")
+          fail("${module_name} is not supported on ${::operatingsystem} ${::lsbdistcodename}")
         }
       }
 
