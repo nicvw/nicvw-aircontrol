@@ -32,7 +32,7 @@ class aircontrol(
 
   include java
 
-  $jre           = $aircontrol::params::jre
+  $jre_path      = $aircontrol::params::jre_path
   $package_cache = $aircontrol::params::package_cache
   $site          = $aircontrol::params::site
 
@@ -54,10 +54,9 @@ class aircontrol(
     }
   }
 
-  ensure_packages($packages)
+  ensure_resource('package', $packages, { tag => 'aircontrol::prereq'})
 
-  # Create dependency on the packages installed via ensure_packages
-  Package <| tag == $packages |> {
+  Package <| tag == 'aircontrol::prereq' |> {
     before +> Exec['install aircontrol']
   }
 
@@ -71,7 +70,7 @@ class aircontrol(
 
   exec { 'install aircontrol':
     command => "dpkg -i ${package_cache}/${installer}",
-    unless  => 'dpkg -l aircontrol',
+    unless  => "dpkg -l aircontrol${version_real}",
     before  => File_line['aircontrol JAVA_HOME'],
   }
 
@@ -87,7 +86,7 @@ class aircontrol(
     ensure     => running,
     hasrestart => true,
     hasstatus  => $hasstatus,
-    name       => "aircontrol${version}",
+    name       => "aircontrol${version_real}",
   }
 
   # Setup dependency on the puppetlabs-java module
