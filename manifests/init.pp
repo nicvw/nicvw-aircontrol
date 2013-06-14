@@ -19,11 +19,11 @@
 #
 # === Authors
 #
-# Nicholas von Waltsleben <nic@cloudseed.co.za>
+# Nicholas von Waltsleben <nic@clue.co.za>
 #
 # === Copyright
 #
-# Copyright 2013 Nicholas von Waltsleben.
+# Copyright 2013 Clue Technologies.
 #
 class aircontrol(
   $installer = $aircontrol::params::installer,
