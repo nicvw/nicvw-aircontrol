@@ -1,9 +1,6 @@
 require 'spec_helper'
-
 describe 'aircontrol', :type => :class do
-
-
-  context 'when deploying on ubuntu 12.04 amd64 with default class parameters' do
+  context 'when deploying version 1 on ubuntu 12.04 amd64' do
     let :facts do
       {
         :operatingsystem => 'Ubuntu',
@@ -52,7 +49,6 @@ describe 'aircontrol', :type => :class do
       })
     end
   end
-
   context 'when deploying version 2 beta on ubuntu 10.04 i386' do
     let :facts do
       {
@@ -114,6 +110,27 @@ describe 'aircontrol', :type => :class do
         'hasstatus'  => true,
         'name'       => 'aircontrol2',
       })
+    end
+  end
+  context 'when deploying an unsupported version' do
+    let :facts do
+      {
+      :operatingsystem => 'Ubuntu',
+      :lsbdistcodename => 'Precise',
+      :osfamily        => 'Debian',
+      :architecture    => 'i386',
+      }
+    end
+    let :params do
+      {
+        :version => '3',
+        :installer => 'beta_installer.deb',
+      }
+    end
+    it do
+      expect {
+        should contain_aircontrol
+      }.to raise_error(Puppet::Error, /Invalid value for \$version, must be \"1\" or \"2\"/)
     end
   end
 end
