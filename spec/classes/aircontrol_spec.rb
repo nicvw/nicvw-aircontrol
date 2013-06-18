@@ -46,6 +46,7 @@ describe 'aircontrol', :type => :class do
         'hasrestart' => true,
         'hasstatus'  => false,
         'name'       => 'aircontrol',
+        'status'     => '/usr/bin/test -f /var/run/aircontrol.pid && /bin/ps `cat /var/run/aircontrol.pid`'
       })
     end
   end
