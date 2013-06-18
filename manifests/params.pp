@@ -30,6 +30,7 @@ class aircontrol::params {
       $package_cache     = '/var/cache/apt/archives'
       $packages_version1 = [ 'jsvc' ]
       $packages_version2 = [ 'jsvc', 'iperf', 'traceroute' ]
+      $pidfile           = '/var/run/aircontrol.pid'
     }
 
     default: {

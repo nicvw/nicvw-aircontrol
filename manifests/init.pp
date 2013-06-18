@@ -15,7 +15,7 @@
 #
 # === Examples
 #
-#  class { 'example_class': }
+#  class { 'aircontrol': }
 #
 # === Authors
 #
@@ -41,6 +41,10 @@ class aircontrol(
       $packages     = $aircontrol::params::packages_version1
       $version_real = ''
       $hasstatus    = false
+
+      Service['aircontrol'] {
+        status => "/usr/bin/test -f $pidfile && /bin/ps `cat $pidfile`",
+      }
     }
 
     '2': {
