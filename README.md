@@ -2,6 +2,7 @@ clue-aircontrol
 ===============
 
 [![Build Status](https://travis-ci.org/cluetechnologies/clue-aircontrol.png?branch=master)](https://travis-ci.org/cluetechnologies/clue-aircontrol)
+
 ## Overview
 
 Install [Ubiquiti airControl](http://wiki.ubnt.com/index.php?title=Aircontrol) on Ubuntu hosts.
