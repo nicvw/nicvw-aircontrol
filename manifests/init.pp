@@ -74,7 +74,7 @@ class aircontrol(
 
   exec { 'install aircontrol':
     command => "dpkg -i ${package_cache}/${installer}",
-    unless  => "dpkg -l aircontrol${version_real}",
+    unless  => "dpkg-query -s aircontrol${version_real} 2>&1 | grep -q 'ok installed'",
     before  => File_line['aircontrol JAVA_HOME'],
   }
 
