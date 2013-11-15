@@ -27,7 +27,7 @@ describe 'aircontrol', :type => :class do
     it do
       should contain_exec('install aircontrol').with({
         'command' => 'dpkg -i /var/cache/apt/archives/aircontrol_1.4.2-beta_all.deb',
-        'unless'  => 'dpkg -l aircontrol',
+        'unless'  => "dpkg-query -s aircontrol 2>&1 | grep -q 'ok installed'",
         'before'  => 'File_line[aircontrol JAVA_HOME]',
       })
     end
@@ -91,7 +91,7 @@ describe 'aircontrol', :type => :class do
     it do
       should contain_exec('install aircontrol').with({
         'command' => 'dpkg -i /var/cache/apt/archives/beta_installer.deb',
-        'unless'  => 'dpkg -l aircontrol2',
+        'unless'  => "dpkg-query -s aircontrol2 2>&1 | grep -q 'ok installed'",
         'before'  => 'File_line[aircontrol JAVA_HOME]',
       })
     end
