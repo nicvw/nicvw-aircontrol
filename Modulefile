@@ -1,5 +1,5 @@
 name         'clue-aircontrol'
-version      '0.0.2'
+version      '1.0.0'
 source       'git://github.com/cluetechnologies/clue-aircontrol'
 author       'Clue Technologies'
 license      'Apache License 2.0'
